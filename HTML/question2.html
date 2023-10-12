@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Survey Form</title>
+    <style>
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Light Gray Background Color */
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="date"], select, input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        .error-message {
+            color: #FF0000;
+        }
+        .dot{
+            color: #FF0000;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .reset {
+            background-color: #FF0000; /* Red Color for Reset Button */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Survey Form</h1>
+    <form id="surveyForm" method="post">
+        <table>
+           
+        <label for="firstName">First Name: <span class="dot">*</span></label>
+        <input type="text" id="firstName" name="firstName" required>
+        <span class="error-message" id="firstNameError"></span>
+     
+        <label for="lastName">Last Name:<span class="dot">*</span></label>
+        <input type="text" id="lastName" name="lastName" required>
+        <span class="error-message" id="lastNameError"></span>
+    
+        <label for="dob">Date of Birth:<span class="dot">*</span></label>
+        <input type="date" id="dob" name="dob" required>
+        <span class="error-message" id="dobError"></span>
+   
+        <label for="country">Country:<span class="dot">*</span></label>
+        <select id="country" name="country" required>
+            <option value="test">---Select---</option>
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="Canada">Canada</option>
+            <option value="UK">UK</option>
+            <option value="Australia">Australia</option>
+        </select>
+        <span class="error-message" id="countryError"></span>
+       
+        <label>Gender:<span class="dot">*</span></label>
+
+        <input type="radio" id="male" name="gender" value="Male" required /><span><strong>Male</strong></span> 
+        <input type="radio" id="female" name="gender" value="female" required /><span><strong>Female</strong></span>
+        <input type="radio" id="other" name="gender" value="other" required /><span><strong>Other</strong></span> 
+        <p></p>
+        <span class="error-message" id="genderError"></span>
+ 
+        <label for="profession">Profession:<span class="dot">*</span></label>
+        <input type="text" id="profession" name="profession" required>
+        <span class="error-message" id="professionError"></span>
+   
+        <label for="email">Email:<span class="dot">*</span></label>
+        <input type="email" id="email" name="email" required>
+        <span class="error-message" id="emailError"></span>
+  
+        <label for="mobile">Mobile Number:<span class="dot">*</span></label>
+        <input type="tel" id="mobile" name="mobile" required>
+        <span class="error-message" id="mobileError"></span>
+        <p></p>
+   
+        <button type="button" onclick="validateForm()">Submit</button>
+        <button type="button" class="reset" onclick="resetForm()">Reset</button>
+   
+    </table>
+    </form>
+</div>
+
+<script>
+     function isValidEmail(email) {
+    // Email validation regex
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+}
+
+
+function isValidMobile(mobile) {
+    // Mobile number validation regex (10 digits)
+    const mobilePattern = /^\d{10}$/;
+    return mobilePattern.test(mobile);
+}
+    function validateForm() {
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const dob = document.getElementById("dob").value;
+        const country = document.getElementById("country").value;
+        const gender = document.querySelector('input[name="gender"]:checked');
+        const profession = document.getElementById("profession").value;
+        const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
+
+        resetErrorMessages();
+
+        if (!firstName) {
+            document.getElementById("firstNameError").textContent = "First Name is required";
+        }
+        if (!lastName) {
+            document.getElementById("lastNameError").textContent = "Last Name is required";
+        }
+        if (!dob) {
+            document.getElementById("dobError").textContent = "Date of Birth is required";
+        }
+        if (country === "---Select---") {
+            document.getElementById("countryError").textContent = "Country is required";
+        }
+        if (!gender) {
+            document.getElementById("genderError").textContent = "Gender is required";
+        }
+        if (!profession) {
+            document.getElementById("professionError").textContent = "Profession is required";
+        }
+        if (!email) {
+        document.getElementById("emailError").textContent = "Email is required";
+    } else if (!isValidEmail(email)) {
+        document.getElementById("emailError").textContent = "Invalid email (Email should contain @ and .com )";
+    }
+    if (!mobile) {
+        document.getElementById("mobileError").textContent = "Mobile Number is required";
+    } else if (!isValidMobile(mobile)) {
+        document.getElementById("mobileError").textContent = "Invalid mobile number (mobile number should be 10 digits)";
+    }
+
+        if (firstName && lastName && dob && country !== "test" && gender && profession && email && mobile) {
+            showSubmission();
+            document.getElementById("surveyForm").reset(); // Reset the form
+        }
+
+       
+    }
+
+   
+
+    function resetForm() {
+        document.getElementById("surveyForm").reset();
+        resetErrorMessages();
+    }
+
+    function resetErrorMessages() {
+        const errorMessages = document.getElementsByClassName("error-message");
+        for (const errorMessage of errorMessages) {
+            errorMessage.textContent = "";
+        }
+    }
+
+    function showSubmission() {
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const dob = document.getElementById("dob").value;
+        const country = document.getElementById("country").value;
+        const gender = document.querySelector('input[name="gender"]:checked').value;
+        const profession = document.getElementById("profession").value;
+        const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
+
+        const popupContent = `
+            <p><strong>First Name:</strong> ${firstName}</p>
+            <p><strong>Last Name:</strong> ${lastName}</p>
+            <p><strong>Date of Birth:</strong> ${dob}</p>
+            <p><strong>Country:</strong> ${country}</p>
+            <p><strong>Gender:</strong> ${gender}</p>
+            <p><strong>Profession:</strong> ${profession}</p>
+            <p><strong>Email:</strong> ${email}</p>`
+        
+        }
+    </script>
+</body>
+</html> 
